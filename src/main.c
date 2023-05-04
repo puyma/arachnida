@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 18:02:38 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/04/28 17:19:50 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/04 22:59:58 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@ typedef struct s_document
 	char		*raw;
 	size_t		size;
 	size_t		recursion_lvl;
+	t_list		*el_meta;
+	t_list		*el_link;
+	t_list		*el_img;
+	t_list		*el_a;
 }				t_document;
 
 static int		ft_crawl(char *url, t_list **documents);
@@ -32,6 +36,7 @@ static int		ft_http_get(char *url, t_document **doc);
 static size_t	c_write_callback(void *data, size_t size, 
 					size_t nmemb, void *userdata);
 static int		ft_new_document(t_document **document);
+static int		ft_find_images(t_document *document);
 
 // manager struct
 
@@ -61,7 +66,76 @@ int	main(int argc, char **argv)
 		if (ft_crawl(argv[optind], &documents) == -1)
 			return (1);
 	t_document *d = documents->content;
-	printf("%s\n", d->raw);
+	ft_find_images(d);
+	return (0);
+}
+
+static int	ft_find_images(t_document *document)
+{
+	char			*html = document->raw;
+	//char			*tag = "meta";
+	//const size_t	tag_len = strlen(tag);
+	char			*html_cp = NULL;
+	(void) html_cp;
+
+	while (*html != '\0')
+	{
+		if (*html == '<')
+		{
+			++html;
+			if (strncmp("meta", html, 4) == 0)
+			{
+				t_list *l = ft_lstnew((void *) html);
+				ft_lstadd_front(&document->el_meta, l);
+			}
+			/*
+			{
+				html_cp = html;
+				while (*html_cp != '>' && *html_cp != '\0')
+					write(1, html_cp++, 1);
+				write(1, "\n", 1);
+			}
+			*/
+			/*
+			else if (strncmp("link", html, 4) == 0)
+			{
+				html_cp = html;
+				while (*html_cp != '>' && *html_cp != '\0')
+					write(1, html_cp++, 1);
+				write(1, "\n", 1);
+			}
+			else if (strncmp("a ", html, 2) == 0)
+			{
+				html_cp = html;
+				while (*html_cp != '>' && *html_cp != '\0')
+					write(1, html_cp++, 1);
+				write(1, "\n", 1);
+			}
+			else if (strncmp("img", html, 3) == 0)
+			{
+				html_cp = html;
+				while (*html_cp != '>' && *html_cp != '\0')
+					write(1, html_cp++, 1);
+				write(1, "\n", 1);
+			}
+			else if (strncmp("svg", html, 3) == 0)
+			{
+				html_cp = html;
+				while (*html_cp != '\0')
+				{
+					write(1, html_cp++, 1);
+					if (*html_cp == '<')
+					{
+						if (strncmp("</svg>", html_cp, 6) == 0)
+							break ;
+					}
+				}
+				write(1, "\n", 1);
+			}
+			*/
+		}
+		++html;
+	}
 	return (0);
 }
 
@@ -80,11 +154,12 @@ static int	ft_new_document(t_document **dst)
 {
 	t_document	*doc;
 	
-	doc = ft_calloc(1, sizeof(doc));
+	doc = calloc(1, sizeof(doc));
 	if (doc == NULL)
 		return (1);
 	doc->size = 0;
 	doc->raw = NULL;
+	doc->el_meta = NULL;
 	*dst = doc;
 	return (0);
 }
@@ -148,19 +223,3 @@ static size_t c_write_callback(void *data, size_t size,
 	doc->raw[doc->size] = '\0';
 	return (realsize);
 }
-
-/*
-	while (str && i < nmemb)
-	{
-		if (*str != '\n' && ! ft_isspace(*str))
-		{
-
-			if (write(1, str, 1) == -1)
-				return (0);
-		}
-		else if (! ft_isspace(*(str + 1)) && i < nmemb - 1)
-			write(1, " ", 1);
-		str++;
-		i++;
-	}
-*/
