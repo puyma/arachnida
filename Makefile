@@ -6,7 +6,7 @@
 #    By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 19:01:34 by mpuig-ma          #+#    #+#              #
-#    Updated: 2023/05/04 22:18:55 by mpuig-ma         ###   ########.fr        #
+#    Updated: 2023/05/08 12:08:10 by mpuig-ma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,10 +19,10 @@ LIBFT		:=	$(LIBFT_DIR)/libft.a
 NAME		:=	spider
 
 CC			:=	gcc
-CFLAGS		:=	-Wall -Werror -Wextra -MMD -O3
+CFLAGS		:=	-Wall -Werror -Wextra -MMD
 LFLAGS		:=	-lcurl -L./$(LIBFT_DIR) -lft
 DEBUG		:=	-g -fsanitize='address,undefined' -Og
-#CFLAGS		+=	$(DEBUG)
+CFLAGS		+=	$(DEBUG)
 INC			:=	-I$(SRC_DIR) -I$(LIBFT_DIR)/src
 RM			:=	rm -rf
 
