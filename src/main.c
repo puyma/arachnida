@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 18:02:38 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/04 22:59:58 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/08 13:15:20 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <stdio.h> /* fprintf */
 #include <unistd.h> /* write */
 #include <string.h> /* memcpy */
+#include <ctype.h> /* isdigit */
 
 #include <curl/curl.h>
 
@@ -29,6 +30,7 @@ typedef struct s_document
 	t_list		*el_link;
 	t_list		*el_img;
 	t_list		*el_a;
+	t_list		*elements;
 }				t_document;
 
 static int		ft_crawl(char *url, t_list **documents);
@@ -36,7 +38,9 @@ static int		ft_http_get(char *url, t_document **doc);
 static size_t	c_write_callback(void *data, size_t size, 
 					size_t nmemb, void *userdata);
 static int		ft_new_document(t_document **document);
-static int		ft_find_images(t_document *document);
+static int		ft_find_images(t_document **document);
+static int		ft_url_isvalid(char *url);
+static int		ft_aredigits(char *str);
 
 // manager struct
 
@@ -48,6 +52,7 @@ int	main(int argc, char **argv)
 	int		c;
 	char	*lvalue = NULL;
 	t_list	*documents = NULL;
+	int		depth_level = 1;
 	
 	while ((c = getopt(argc, argv, "rl:v")) != -1)
 	{
@@ -62,77 +67,53 @@ int	main(int argc, char **argv)
 		else
 			return 3;
 	}
-	if (argv[optind])
+	if (ft_aredigits(lvalue) == 0)
+	{ write(2, "invalid lvalue\n", 15); exit(3); }
+	if (lvalue != NULL)
+		depth_level = atoi(lvalue);
+	while (depth_level > 0)
+	{
+		if (! argv[optind] || ft_url_isvalid(argv[optind]) == -1)
+		{ write(2, "missing or invalid url...\n", 26); exit (1); }
 		if (ft_crawl(argv[optind], &documents) == -1)
 			return (1);
-	t_document *d = documents->content;
-	ft_find_images(d);
+		t_document *d = documents->content;
+		ft_find_images(&d);
+		--depth_level;
+	}
 	return (0);
 }
 
-static int	ft_find_images(t_document *document)
+static int	ft_aredigits(char *str)
 {
-	char			*html = document->raw;
-	//char			*tag = "meta";
-	//const size_t	tag_len = strlen(tag);
-	char			*html_cp = NULL;
-	(void) html_cp;
+	char	*s = str;
+
+	while (s && *s != '\0')
+	{
+		if (isdigit(*s) == 0)
+			return (0);
+		++s;
+	}
+	return (1);
+}
+
+static int	ft_url_isvalid(char *url)
+{
+	if (url == NULL || *url == '\0' || *url == ' ')
+		return (-1);
+	return (0);
+}
+static int	ft_find_images(t_document **document)
+{
+	t_document	*d = *document;
+	char		*html = d->raw;
 
 	while (*html != '\0')
 	{
 		if (*html == '<')
 		{
-			++html;
-			if (strncmp("meta", html, 4) == 0)
-			{
-				t_list *l = ft_lstnew((void *) html);
-				ft_lstadd_front(&document->el_meta, l);
-			}
-			/*
-			{
-				html_cp = html;
-				while (*html_cp != '>' && *html_cp != '\0')
-					write(1, html_cp++, 1);
-				write(1, "\n", 1);
-			}
-			*/
-			/*
-			else if (strncmp("link", html, 4) == 0)
-			{
-				html_cp = html;
-				while (*html_cp != '>' && *html_cp != '\0')
-					write(1, html_cp++, 1);
-				write(1, "\n", 1);
-			}
-			else if (strncmp("a ", html, 2) == 0)
-			{
-				html_cp = html;
-				while (*html_cp != '>' && *html_cp != '\0')
-					write(1, html_cp++, 1);
-				write(1, "\n", 1);
-			}
-			else if (strncmp("img", html, 3) == 0)
-			{
-				html_cp = html;
-				while (*html_cp != '>' && *html_cp != '\0')
-					write(1, html_cp++, 1);
-				write(1, "\n", 1);
-			}
-			else if (strncmp("svg", html, 3) == 0)
-			{
-				html_cp = html;
-				while (*html_cp != '\0')
-				{
-					write(1, html_cp++, 1);
-					if (*html_cp == '<')
-					{
-						if (strncmp("</svg>", html_cp, 6) == 0)
-							break ;
-					}
-				}
-				write(1, "\n", 1);
-			}
-			*/
+			if (*html != '\0' && *(html + 1) != '\0' && *(html + 1) != '/')
+				ft_lstadd_back(&d->elements, ft_lstnew((void *) html));
 		}
 		++html;
 	}
@@ -144,7 +125,11 @@ static int	ft_crawl(char *url, t_list **documents)
 	t_document	*doc;
 
 	ft_printf("crawling %s\n", url);
-	ft_new_document(&doc);
+	if (ft_new_document(&doc) == -1)
+	{
+		write(2, "error\n", 6);
+		exit(2);
+	}
 	ft_http_get(url, &doc);
 	*documents = ft_lstnew(doc);
 	return (0);
@@ -154,12 +139,17 @@ static int	ft_new_document(t_document **dst)
 {
 	t_document	*doc;
 	
-	doc = calloc(1, sizeof(doc));
+	doc = calloc(1, sizeof(t_document));
 	if (doc == NULL)
-		return (1);
+	{
+		write(1, "no allocation\n", 14);
+		exit(2);
+		return (-1);
+	}
 	doc->size = 0;
 	doc->raw = NULL;
 	doc->el_meta = NULL;
+	doc->elements = NULL;
 	*dst = doc;
 	return (0);
 }
