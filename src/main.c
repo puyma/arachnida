@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 18:02:38 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/09 13:39:40 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/09 14:49:52 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,7 @@ main (int argc, char **argv)
 			ft_point_tags (&d);
 			ft_append_hrefs (&d, &url_cueue);
 			//url_cueue = url_cueue->next;
-			//while (url_cueue != NULL)
-			//{
-		//		printf("%s\n", url_cueue->content);
-	//			url_cueue = url_cueue->next;
-	//		}
-//			exit (2200);
-//			url_cueue = url_cueue->next;
-			exit (1000);
+			url_cueue = NULL;
 		}
 		--depth_level;
 	}
@@ -110,7 +103,7 @@ static int
 ft_append_hrefs (t_document **document, t_list **url_cueue)
 {
 	char		c = '\0';
-	char		*html = NULL;
+	char		*el = NULL;
 	char		*href = NULL;
 	t_document	*d = *document;
 	t_list		*elements = NULL;
@@ -119,33 +112,16 @@ ft_append_hrefs (t_document **document, t_list **url_cueue)
 	elements = d->elements;
 	while (elements != NULL)
 	{
-		html = elements->content;
-		if (*html != '\0' && *html == '<' && (strncmp (html, "<a ", 3) == 0 || strncmp (html, "<a\n", 3) == 0))
+		el = elements->content;
+		if (*el == '<' && *(el + 1) == 'a')
 		{
-			while (*html != '\0' && *html != '>')
-			{
-				if (*html == 'h' && strncmp(html, "href=", 5) == 0)
-					break ;
-				++html;
-			}
-			if (*html == '>')
-				break ;
-			if (strncmp (html, "href=", 5) == 0)
-				html += 5;
-			if (*html != 39 && *html != 34)
-			{ write (2, "href error\n", 11); write (1, html, 8); return (9); }
-			c = *html;
-			++html;
-			href = ft_substr (html, 0, ft_strchr (html, 34) - html);
-			if (ft_url_isvisited (url_cueue, href) == 0 && *href != '#')
-				ft_lstadd_back (&urls, ft_lstnew ((void *) href));
-			else
-				free (href);
+			write(1, el, 2);
+			write(1, "\n", 1);
 		}
 		elements = elements->next;
 	}
-	(void) urls;
 	return (0);
+	(void) c; (void) href; (void) urls; (void) ft_url_isvisited;
 }
 
 static int
@@ -195,7 +171,7 @@ ft_url_isvalid (char *url)
 static int
 ft_crawl (char *url, t_list **documents)
 {
-	t_document	*doc;
+	t_document	*doc = NULL;
 
 	ft_printf ("crawling %s\n", url);
 	if (ft_new_document (&doc) == -1)
@@ -265,9 +241,9 @@ ft_http_get (char *url, t_document **doc)
 		curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, &c_write_callback);
 		curl_easy_setopt (curl, CURLOPT_WRITEDATA, (void *) *doc);
 		curl_easy_setopt (curl, CURLOPT_FAILONERROR, 0L);
-		//curl_easy_setopt (curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 3000L);
-		//curl_easy_setopt (curl, CURLOPT_TIMEOUT, 20L);
-		//curl_easy_setopt (curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 22L);
+		curl_easy_setopt (curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 3000L);
+		curl_easy_setopt (curl, CURLOPT_TIMEOUT, 20L);
+		curl_easy_setopt (curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 22L);
 		res = curl_easy_perform (curl);
 		if (res != CURLE_OK)
 		{
