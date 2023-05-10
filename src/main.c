@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 18:02:38 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/09 17:35:19 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/10 13:02:13 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_element
 	size_t		type;
 }				t_element;
 
+static int		ft_init(int argc, char **argv);
 static int		ft_crawl (char *url, t_list **documents);
 static int		ft_http_get (char *url, t_document **doc);
 static int		ft_new_document (t_document **document);
@@ -48,18 +49,46 @@ static size_t	c_write_callback (void *data, size_t size,
 static int		ft_url_isvisited (t_list **url_cueue, char *href);
 static int		ft_get_attribute(const char *attribute, 
 					char **html_element);
+
 int	rflag = 0;
 int	verbose = 0;
+int	depth_level = 1;
 
 	int
 	main (int argc, char **argv)
 	{
-		int		c;
 		char	*url = NULL;
-		char	*lvalue = NULL;
 		t_list	*documents = NULL;
-		int		depth_level = 1;
-	
+		t_list	**url_cueue = calloc(depth_level + 1, sizeof(t_list *));
+
+		if (ft_init(argc, argv)) { return (3); }
+		int i = 0;
+		url_cueue[i] = ft_lstnew ((void *) argv[optind]);
+		while (i < depth_level)
+		{
+			if (url_cueue[i] == NULL)
+				fprintf(stderr, "url_cueue[%d] is NULL\n", i);
+			while (url_cueue[i] != NULL)
+			{
+				url = url_cueue[i]->content;
+				if (ft_crawl (url, &documents) == -1)
+					return (1);
+				t_document *d = documents->content;
+				ft_point_tags (&d);
+				ft_append_anchors (&d, &url_cueue[i + 1]);
+				url_cueue[i] = url_cueue[i]->next;
+			}
+			++i;
+		}
+		return (0);
+	}
+
+	static int
+	ft_init(int argc, char **argv)
+	{
+		int		c = 0;
+		char	*lvalue = NULL;
+
 		/* set options */
 		while ((c = getopt (argc, argv, "rl:v")) != -1)
 		{
@@ -75,28 +104,16 @@ int	verbose = 0;
 				return 3;
 		}
 		if (ft_aredigits (lvalue) == 0)
-		{ write (2, "invalid lvalue\n", 15); exit (3); }
+		{
+			write (2, "invalid lvalue\n", 15);
+			return (1);
+		}
 		if (lvalue != NULL)
 			depth_level = atoi (lvalue);
 		if (! argv[optind] || ft_url_isvalid (argv[optind]) == -1)
-		{ write (2, "missing or invalid url...\n", 26); exit (1); }
-	
-		/* main loop */
-		t_list	*url_cueue = ft_lstnew ((void *) argv[optind]);
-		int i = 0;
-		while (i < depth_level)
 		{
-			while (url_cueue != NULL)
-			{
-				url = url_cueue->content;
-				if (ft_crawl (url, &documents) == -1)
-					return (1);
-				t_document *d = documents->content;
-				ft_point_tags (&d);
-				ft_append_anchors (&d, &url_cueue);
-				url_cueue = url_cueue->next;
-			}
-			++i;
+			write (2, "missing or invalid url...\n", 26);
+			return (1);
 		}
 		return (0);
 	}
@@ -121,7 +138,9 @@ int	verbose = 0;
 				{ fprintf(stderr, "attribute \"%s\" not found\n", attr); }
 				href = strndup(el + 1, strchr(el + 1, *el) - el - 1);
 				if (ft_url_isvisited(&urls, href) == 0 && *href != '#')
+				{
 					ft_lstadd_back(&urls, ft_lstnew((void *) href));
+				}
 				else
 					free(href);
 			}
