@@ -6,7 +6,7 @@
 #    By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 19:01:34 by mpuig-ma          #+#    #+#              #
-#    Updated: 2023/05/08 12:08:10 by mpuig-ma         ###   ########.fr        #
+#    Updated: 2023/05/10 16:23:35 by mpuig-ma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ RM			:=	rm -rf
 NOSTYLE		:=	\033[0m
 STYLE		:=	\033[0;32m
 
-SRC_FILES	:=	src/main.c
+SRC_FILES	:=	src/spider.c
 OBJ_FILES	=	$(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(notdir $(basename $(SRC_FILES)))))
 DEP_FILES	=	$(addprefix $(BUILD_DIR)/, $(addsuffix .d, $(notdir $(basename $(SRC_FILES)))))
 
