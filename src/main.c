@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 18:02:38 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/10 16:04:53 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/10 16:17:31 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int		ft_append_anchors (t_document **document,
 					t_list *urls);
 static size_t	c_write_callback (void *data, size_t size,
 					size_t nmemb, void *userdata);
-static int		ft_url_isvisited (t_list **url_cueue, char *href);
+static int		ft_url_isvisited (t_list *url_cueue, char *href);
 static int		ft_get_attribute(const char *attribute, 
 					char **html_element);
 
@@ -57,7 +57,7 @@ int	depth_level = 1;
 	int
 	main (int argc, char **argv)
 	{
-		t_list		*urls[3];
+		t_list		*urls[3 + 1];
 		t_list		*url_cueue = NULL;
 		t_document	*site = NULL;
 
@@ -132,7 +132,8 @@ int	depth_level = 1;
 		if (urls == NULL)// || document == NULL)
 		{
 			fprintf (stderr, "ft_append_anchors() received NULL argument\n");
-			exit (6);
+			urls = ft_lstnew((void *) NULL);
+			//exit (6);
 		}
 		d = *document;
 		elements = d->elements;
@@ -145,7 +146,7 @@ int	depth_level = 1;
 				if (ft_get_attribute(attr, &el) == 0)
 				{ fprintf(stderr, "attribute \"%s\" not found\n", attr); }
 				href = strndup(el + 1, strchr(el + 1, *el) - el - 1);
-				if (ft_url_isvisited(&urls, href) == 0 && *href != '#')
+				if (ft_url_isvisited(urls, href) == 0 && *href != '#')
 				{
 					ft_lstadd_back(&urls, ft_lstnew((void *) href));
 				}
@@ -182,15 +183,15 @@ int	depth_level = 1;
 	}
 
 	static int
-	ft_url_isvisited (t_list **url_cueue, char *href)
+	ft_url_isvisited (t_list *url_cueue, char *href)
 	{
-		t_list	*urls = *url_cueue;
+		t_list	*urls; urls = url_cueue;
 		int		delta_len = 0;
 		int		strcmp_diff = 0;
 	
 		while (urls != NULL)
 		{
-			strcmp_diff = strcmp (urls->content, href);
+			strcmp_diff = strncmp (urls->content, href, strlen(href));
 			if (strcmp_diff == 0)
 				return (1);
 			delta_len = strlen(urls->content) - strlen(href);
@@ -200,7 +201,7 @@ int	depth_level = 1;
 				return (1);
 			urls = urls->next;
 		}
-	return (0);
+		return (0);
 	}
 
 	static int
