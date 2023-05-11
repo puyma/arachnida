@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 16:23:46 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 13:25:14 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:40:18 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static t_list	**ft_init_cueue (void);
 
 int	rflag = 0;
 int	verbose = 0;
-int	depth_level = 3;
+int	depth_level = 1;
 
 int	main(int argc, char **argv)
 {
@@ -37,7 +37,6 @@ int	main(int argc, char **argv)
 	/* set first url (user input) */
 	url = argv[optind];
 	cueue_arr[0] = ft_lstnew((void *) url);
-	cueue_arr[1] = ft_lstnew((void *) url);
 
 	i = 0;
 	while (i < depth_level)
@@ -53,17 +52,22 @@ int	main(int argc, char **argv)
 			ft_point_tags (&site);
 
 			if (i < depth_level - 1)
-			{
-				ft_append_anchors (site, &cueue_arr[i + 1]);
-				//cueue_arr[i + 1] = ft_lstnew((void *) NULL);
-			}
-
-			//printf("%d: ...%s\n", i, url_cueue->content);
-
+				ft_append_anchors (site, cueue_arr, i);
 			//ft_download_images ();
-			//free(site);
-			//site = NULL;
 			url_cueue = url_cueue->next;
+		}
+		++i;
+	}
+	i = 0;
+	t_list *l;
+	while (i < depth_level)
+	{
+		l = cueue_arr[i];
+		ft_printf("in list [%d]\n", i);
+		while (l != NULL)
+		{
+			ft_printf("%s\n", l->content);
+			l = l->next;
 		}
 		++i;
 	}
@@ -106,15 +110,17 @@ ft_init (int argc, char **argv)
 static t_list **
 ft_init_cueue(void)
 {
-	int	i = 0;
 	t_list	**list_arr;
 
 	list_arr = (t_list **) calloc(depth_level + 1, sizeof(t_list *));
+	/*
+	int i = 0;
 	while (++i < depth_level)
 	{
 		list_arr[i] = (t_list *) calloc(1, sizeof(t_list));
-		list_arr[i] = ft_lstnew((void *) NULL);
+		//list_arr[i] = ft_lstnew((void *) NULL);
 		i++;
 	}
+	*/
 	return (list_arr);
 }

@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:31:21 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 13:28:55 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/11 15:26:26 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ ft_http_get(char *url, t_site **site)
 		curl_easy_setopt (curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 3000L);
 		curl_easy_setopt (curl, CURLOPT_TIMEOUT, 20L);
 		curl_easy_setopt (curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 22L);
+		curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 50L);
 		res = curl_easy_perform (curl);
 		if (res != CURLE_OK)
 		{
