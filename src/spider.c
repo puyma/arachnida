@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 16:23:46 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 12:13:21 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/11 13:25:14 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	main(int argc, char **argv)
 	/* set first url (user input) */
 	url = argv[optind];
 	cueue_arr[0] = ft_lstnew((void *) url);
+	cueue_arr[1] = ft_lstnew((void *) url);
 
 	i = 0;
 	while (i < depth_level)
@@ -46,17 +47,19 @@ int	main(int argc, char **argv)
 		{
 			url = url_cueue->content;
 			if (ft_crawl (url, &site))
-			{ write (2, "ft_crawl failed\n", 16); return (3); }
+			{ url_cueue = url_cueue->next; continue ; }
+			else { ft_printf("└ OK\n"); }
 
 			ft_point_tags (&site);
 
 			if (i < depth_level - 1)
 			{
-				ft_append_anchors (site, cueue_arr[i + 1]);
+				ft_append_anchors (site, &cueue_arr[i + 1]);
 				//cueue_arr[i + 1] = ft_lstnew((void *) NULL);
 			}
 
-			printf("%d: ...%s\n", i, url_cueue->content);
+			//printf("%d: ...%s\n", i, url_cueue->content);
+
 			//ft_download_images ();
 			//free(site);
 			//site = NULL;
@@ -106,7 +109,7 @@ ft_init_cueue(void)
 	int	i = 0;
 	t_list	**list_arr;
 
-	list_arr = (t_list **) calloc(depth_level, sizeof(t_list *));
+	list_arr = (t_list **) calloc(depth_level + 1, sizeof(t_list *));
 	while (++i < depth_level)
 	{
 		list_arr[i] = (t_list *) calloc(1, sizeof(t_list));

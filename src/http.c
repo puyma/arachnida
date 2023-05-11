@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:31:21 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 11:44:45 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/11 13:28:55 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,14 @@ ft_http_get(char *url, t_site **site)
 				CURL_HTTP_VERSION_NONE);
 		curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, &c_write_callback);
 		curl_easy_setopt (curl, CURLOPT_WRITEDATA, (void *) *site);
-		curl_easy_setopt (curl, CURLOPT_FAILONERROR, 0L);
+		curl_easy_setopt (curl, CURLOPT_FAILONERROR, 1L);
 		curl_easy_setopt (curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 3000L);
 		curl_easy_setopt (curl, CURLOPT_TIMEOUT, 20L);
 		curl_easy_setopt (curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 22L);
 		res = curl_easy_perform (curl);
 		if (res != CURLE_OK)
 		{
-			fprintf (stderr, "curl_easy_perform() failed: %s\n", 
+			fprintf (stderr, "└ %s\n", 
 					curl_easy_strerror (res));
 			return (1);
 	   	}

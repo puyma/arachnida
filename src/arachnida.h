@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:37:20 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 12:18:19 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/11 13:20:48 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		ft_crawl (char *url, t_site **site);
 int		ft_http_get (char *url, t_site **site);
 
 int		ft_point_tags (t_site **site);
-int		ft_append_anchors (t_site *site, t_list *urls);
+int		ft_append_anchors (t_site *site, t_list **urls);
 
 int		ft_get_attribute(const char *attr, char **html_element);
 
