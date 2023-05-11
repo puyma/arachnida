@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:31:21 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 15:26:26 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/11 19:25:33 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ ft_http_get(char *url, t_site **site)
 	if (curl)
 	{
 		curl_easy_setopt (curl, CURLOPT_URL, url);
-		curl_easy_setopt (curl, CURLOPT_USERAGENT, "curl/7.64.1");
+		//curl_easy_setopt (curl, CURLOPT_USERAGENT, "curl/7.64.1");
+		curl_easy_setopt (curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/114.0");
 		curl_easy_setopt (curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
 		curl_easy_setopt (curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		curl_easy_setopt (curl, CURLOPT_SSL_VERIFYHOST, 0L);
 		curl_easy_setopt (curl, CURLOPT_FOLLOWLOCATION, 1L);
-		curl_easy_setopt (curl, CURLOPT_VERBOSE, 0L);
+		if (verbose != 0)
+			curl_easy_setopt (curl, CURLOPT_VERBOSE, 1L);
 		curl_easy_setopt (curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
 		curl_easy_setopt (curl, CURLOPT_SSL_ENABLE_ALPN, 1L);
 		curl_easy_setopt (curl, CURLOPT_HTTP_VERSION,
@@ -42,7 +44,14 @@ ft_http_get(char *url, t_site **site)
 		curl_easy_setopt (curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 3000L);
 		curl_easy_setopt (curl, CURLOPT_TIMEOUT, 20L);
 		curl_easy_setopt (curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 22L);
-		curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 50L);
+		curl_easy_setopt (curl, CURLOPT_MAXREDIRS, 50L);
+		curl_easy_setopt (curl, CURLOPT_ACCEPT_ENCODING, "");
+		curl_easy_setopt (curl, CURLOPT_TRANSFER_ENCODING, 1L);
+		curl_easy_setopt (curl, CURLOPT_HTTP_TRANSFER_DECODING, 1L);
+		curl_easy_setopt (curl, CURLOPT_HTTP_CONTENT_DECODING, 1L);
+		curl_easy_setopt (curl, CURLOPT_DNS_SERVERS, "1.1.1.1,8.8.8.8");
+		curl_easy_setopt (curl, CURLOPT_COOKIEFILE, "cookies.txt");
+		curl_easy_setopt (curl, CURLOPT_COOKIEJAR, "cookies.txt");
 		res = curl_easy_perform (curl);
 		if (res != CURLE_OK)
 		{

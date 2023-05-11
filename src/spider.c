@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 16:23:46 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 17:40:18 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/11 19:36:35 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,21 +53,8 @@ int	main(int argc, char **argv)
 
 			if (i < depth_level - 1)
 				ft_append_anchors (site, cueue_arr, i);
-			//ft_download_images ();
+			ft_http_get_images (site);
 			url_cueue = url_cueue->next;
-		}
-		++i;
-	}
-	i = 0;
-	t_list *l;
-	while (i < depth_level)
-	{
-		l = cueue_arr[i];
-		ft_printf("in list [%d]\n", i);
-		while (l != NULL)
-		{
-			ft_printf("%s\n", l->content);
-			l = l->next;
 		}
 		++i;
 	}
