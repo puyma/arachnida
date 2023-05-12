@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:37:20 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 11:45:06 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 13:24:36 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 typedef struct s_site
 {
 	char		*url;
-	char		*host;
+	char		*hostname;
 	char		*raw_html;
 	size_t		size;
 	t_list		*elements;
@@ -37,21 +37,24 @@ extern int	verbose;
 extern int	depth_level;
 
 int		crawl (char *url, t_site **site);
-int		http_get(char *url, void *userdata, 
+int		http_get (char *url, void *userdata, 
 			size_t (*func)(void *data, size_t size, 
 				size_t nmemb, void *userdata));
 int		http_download (char *url, char *filename);
 
-char	*html_get_attribute (const char *attr, char *html_element);
-t_list	*html_get_images(t_site *site);
+char	*html_get_attr_value (char *attr, char *html_element);
+char	*html_get_attr (const char *attr, char *html_element);
+t_list	*html_get_images (t_site *site);
 
 int		url_isvalid (char *url);
 int		url_isvisited (char *href, t_list **url_cueue, int n);
+int		url_resolve_absolute (t_site *site, char **url);
 char	*url_hostname (char *url);
+int		cueue_url (char *url, t_list **url_cueue, int n);
 
-t_site	*ft_new_site(void);
-int		ft_point_tags (t_site **site);
-int		ft_append_anchors (t_site *site, t_list **urls, int n);
+int		append_anchors (t_site *site, t_list **urls, int n);
+
+t_site	*ft_new_site (void);
 int		ft_aredigits (char *str);
 
 #endif
