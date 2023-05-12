@@ -6,7 +6,7 @@
 #    By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 19:01:34 by mpuig-ma          #+#    #+#              #
-#    Updated: 2023/05/12 10:47:54 by mpuig-ma         ###   ########.fr        #
+#    Updated: 2023/05/12 12:25:43 by mpuig-ma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,8 +34,13 @@ RM			:=	rm -rf
 NOSTYLE		:=	\033[0m
 STYLE		:=	\033[0;32m
 
-SRC_FILES	:=	src/crawl.c src/http.c src/site.c src/spider.c src/str_utils.c \
-				src/html_attributes.c src/html_tags.c src/url_utils.c src/html_images.c
+SRC_FILES	:=	src/spider.c \
+				src/crawl.c src/http.c src/site.c \
+				src/html_a.c \
+				src/html_attributes.c \
+				src/html_images.c \
+				src/str_utils.c src/url_utils.c
+
 OBJ_FILES	=	$(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(notdir $(basename $(SRC_FILES)))))
 DEP_FILES	=	$(addprefix $(BUILD_DIR)/, $(addsuffix .d, $(notdir $(basename $(SRC_FILES)))))
 
