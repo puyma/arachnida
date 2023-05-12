@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 12:22:55 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 13:26:20 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:31:51 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ append_anchors (t_site *site, t_list **cueue_arr, int n)
 		if (*(el + 1) == 'a' && isspace (*(el + 2)) != 0)
 		{
 			value = html_get_attr_value("href", el);
-			if (*value == '/')
+			if (value && *value == '/')
 				url_resolve_absolute (site, &value);
-			if (*value != 'h')
-			{ free (value); exit (7); }
-			cueue_url (value, cueue_arr, n);
+			if (value && *value != 'h')
+			{ free (value); value = NULL; }
+			if (value != NULL && *value != '\0') { cueue_url (value, cueue_arr, n); }
 		}
 		elements = elements->next;
 	}

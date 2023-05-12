@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:37:20 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 13:24:36 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:31:47 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <stdio.h> /* fprintf, printf */
 # include <unistd.h> /* write */
 # include <ctype.h> /* isdigit */
+# include <sys/stat.h> /* mkdir */
+# include <errno.h>
 
 # include <curl/curl.h> /* libcurl C API */
 
@@ -37,10 +39,8 @@ extern int	verbose;
 extern int	depth_level;
 
 int		crawl (char *url, t_site **site);
-int		http_get (char *url, void *userdata, 
-			size_t (*func)(void *data, size_t size, 
-				size_t nmemb, void *userdata));
-int		http_download (char *url, char *filename);
+int		http_get (char *url, void *userdata, FILE *file);
+int		http_download(char *url, char *filename);
 
 char	*html_get_attr_value (char *attr, char *html_element);
 char	*html_get_attr (const char *attr, char *html_element);
@@ -49,6 +49,7 @@ t_list	*html_get_images (t_site *site);
 int		url_isvalid (char *url);
 int		url_isvisited (char *href, t_list **url_cueue, int n);
 int		url_resolve_absolute (t_site *site, char **url);
+char	*url_path_to_file (char *url);
 char	*url_hostname (char *url);
 int		cueue_url (char *url, t_list **url_cueue, int n);
 

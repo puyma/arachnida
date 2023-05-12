@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 12:10:25 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 13:16:37 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 15:59:37 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,16 @@
 char *
 html_get_attr_value (char *attr, char *html_element)
 {
-	char	*value;
-	char	*el;
+	char		*value;
+	char		*el;
+	long int	len;
 
 	el = html_get_attr (attr, html_element);
 	if (el == NULL) { return (NULL); }
-	value = strndup(el + 1, strchr (el + 1, *el) - el - 1);
+	len = strchr (el + 1, *el) - el - 1;
+	if (len == 0)
+		return (NULL);
+	value = strndup(el + 1, len);
 	return (value);
 }
 

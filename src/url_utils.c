@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 12:08:33 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 13:26:16 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:31:46 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ cueue_url (char *url, t_list **url_cueue, int n)
 
 int
 url_resolve_absolute (t_site *site, char **url)
+	// falta comprovar si host acaba amb / o directament amb something/
+	// inversa de htts://; if not schema
 {
 	char	*relative_url;
 	char	*absolute_url;
@@ -107,4 +109,13 @@ url_resolve_absolute (t_site *site, char **url)
 		free (relative_url);
 	*url = absolute_url;
 	return (0);
+}
+
+char *
+url_path_to_file (char *url)
+{
+	char	*path_to_file;
+
+	path_to_file = strdup (strrchr (url, '/') + 1);
+	return (path_to_file);
 }
