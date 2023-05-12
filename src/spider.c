@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 16:23:46 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 18:32:13 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:52:59 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,13 @@ main (int argc, char **argv)
 		while (url_cueue != NULL)
 		{
 			url = url_cueue->content;
-			if (crawl (url, &site))
-			{ url_cueue = url_cueue->next; continue ; }
+
+			if (crawl (url, &site)) { url_cueue = url_cueue->next; continue ; }
 			else { ft_printf("└ OK\n"); }
 
 			if (i < depth_level - 1) { append_anchors (site, cueue_arr, i); }
 			
 			images = html_get_images(site);
-			// if not already, then
 			if (mkdir ("data", 0777) != 0)
 			{
 				if (errno != EEXIST)
@@ -62,6 +61,8 @@ main (int argc, char **argv)
 			}
 			while (images != NULL)
 			{
+				char *url = url_path_to_file(images->content);
+				printf(" %s\n", url);
 				char *file = ft_strjoin("/Users/mpuig-ma/Projectes/arachnida/data/", url_path_to_file(images->content));
 				char *temp = images->content;
 				if (*temp == 'h' && *(temp + 1) == 't')

@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:31:21 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 18:33:14 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:53:01 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ http_download(char *url, char *filename)
 	CURLcode	res;
 	FILE		*file;
 
-	printf("filename: %s\n", filename);
 	int fd = open(filename, 0555); (void) fd;
 	file = fopen(filename, "wb");
 	if (file == NULL)
