@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 16:23:46 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 19:36:35 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:24:22 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	main(int argc, char **argv)
 	t_site		*site = NULL;
 	t_list		*url_cueue;
 	t_list 		**cueue_arr;
+	t_list		*images;
 
 	if (ft_init(argc, argv) != 0)
 	{ write(2, "ft_init failed\n", 15); return (1); }
@@ -45,7 +46,7 @@ int	main(int argc, char **argv)
 		while (url_cueue != NULL)
 		{
 			url = url_cueue->content;
-			if (ft_crawl (url, &site))
+			if (crawl (url, &site))
 			{ url_cueue = url_cueue->next; continue ; }
 			else { ft_printf("└ OK\n"); }
 
@@ -53,7 +54,17 @@ int	main(int argc, char **argv)
 
 			if (i < depth_level - 1)
 				ft_append_anchors (site, cueue_arr, i);
-			ft_http_get_images (site);
+			
+			images = html_get_images(site);
+			/*
+			while (images != NULL)
+			{
+				//ft_printf(" - %s\n", images->content);
+				(void) http_download;
+				//http_download (images->content, NULL);
+				images = images->next;
+			}
+			*/
 			url_cueue = url_cueue->next;
 		}
 		++i;
@@ -88,7 +99,7 @@ ft_init (int argc, char **argv)
 	if (lvalue != NULL)
 		depth_level = atoi (lvalue);
 
-	if (! argv[optind] || ft_url_isvalid (argv[optind]) == -1)
+	if (! argv[optind] || url_isvalid (argv[optind]) == -1)
 	{ write(2, "missing or invalid url...\n", 26); return (1); }
 
 	return (0);

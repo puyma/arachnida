@@ -6,14 +6,14 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 12:08:33 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 19:09:45 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:14:26 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arachnida.h"
 
 int
-ft_url_isvalid (char *url)
+url_isvalid (char *url)
 /* returns zero if invalid */
 {
 	if (url == NULL || *url == '\0' || isspace(*url) != 0)
@@ -22,7 +22,7 @@ ft_url_isvalid (char *url)
 }
 
 int
-ft_url_isvisited (char *href, t_list **url_cueue, int n)
+url_isvisited (char *href, t_list **url_cueue, int n)
 {
 	t_list	*urls;
 	size_t	len = 0;
@@ -76,7 +76,7 @@ ft_url_isvisited (char *href, t_list **url_cueue, int n)
 }
 
 char *
-ft_url_hostname(char *url)
+url_hostname(char *url)
 {
 	char	*hostname;
 	char	*colon;

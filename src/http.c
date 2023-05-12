@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:31:21 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/11 19:25:33 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:26:49 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,19 @@
 
 static size_t	c_write_callback (void *data, size_t size, 
 					size_t nmemb, void *userdata);
+static size_t	c_writefd_callback (void *data, size_t size, 
+					size_t nmemb, void *userdata);
 
+// change ft_hht_get as base function, http_download passes url, userdata pointer and pointer to function callback.
 int
-ft_http_get(char *url, t_site **site)
+http_get(char *url, void *userdata, 
+		size_t (*func)(void *data, size_t size, size_t nmemb, void *userdata))
 {
 	CURL		*curl;
 	CURLcode	res;
 
+	if (func == NULL)
+		func = &c_write_callback;
 	curl_global_init (CURL_GLOBAL_DEFAULT);
 	curl = curl_easy_init ();
 	if (curl)
@@ -38,8 +44,9 @@ ft_http_get(char *url, t_site **site)
 		curl_easy_setopt (curl, CURLOPT_SSL_ENABLE_ALPN, 1L);
 		curl_easy_setopt (curl, CURLOPT_HTTP_VERSION,
 				CURL_HTTP_VERSION_NONE);
-		curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, &c_write_callback);
-		curl_easy_setopt (curl, CURLOPT_WRITEDATA, (void *) *site);
+		curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, func);
+		//curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, &c_write_callback);
+		curl_easy_setopt (curl, CURLOPT_WRITEDATA, (void *) userdata);
 		curl_easy_setopt (curl, CURLOPT_FAILONERROR, 1L);
 		curl_easy_setopt (curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 3000L);
 		curl_easy_setopt (curl, CURLOPT_TIMEOUT, 20L);
@@ -65,6 +72,19 @@ ft_http_get(char *url, t_site **site)
 	return (0);
 }
 
+int
+http_download(char *url, char *filename)
+{
+	int	fd;
+	int	*fd_ptr;
+
+	fd = open(filename, O_CREAT);
+	fd_ptr = &fd;
+	http_get(url, (void *) fd_ptr, &c_writefd_callback);
+	close(fd);
+	return (0);
+}
+
 static size_t
 c_write_callback (void *data, size_t size, size_t nmemb, void *userdata)
 {
@@ -82,5 +102,16 @@ c_write_callback (void *data, size_t size, size_t nmemb, void *userdata)
 	memcpy (&(site->raw_html[site->size]), data, realsize);
 	site->size += realsize;
 	site->raw_html[site->size] = '\0';
+	return (realsize);
+}
+
+static size_t
+c_writefd_callback (void *data, size_t size, size_t nmemb, void *userdata)
+{
+	size_t	realsize = size * nmemb;
+	int		fd = (int) &userdata;
+
+	if (write(fd, data, realsize) == -1)
+		exit (99);
 	return (realsize);
 }
