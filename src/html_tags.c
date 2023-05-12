@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:46:47 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 11:15:10 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:44:35 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,23 @@ ft_append_anchors (t_site *site, t_list **cueue_arr, int n)
 		if (*(el + 1) == 'a' && isspace (*(el + 2)) != 0)
 		{
 			char *attr = "href";
-			if (html_get_attribute (attr, &el) == 0)
-			{ fprintf (stderr, "attribute \"%s\" not found\n", attr); return (2); }
+			el = html_get_attribute (attr, el);
+			if (el == NULL)
+			{
+				fprintf (stderr, "attribute \"%s\" not found\n", attr);
+				return (2);
+			}
 			href = strndup (el + 1, strchr (el + 1, *el) - el - 1);
 			if (*href == 'h' && url_isvisited (href, cueue_arr, n + 1) == 0)
-				ft_lstadd_back (&cueue_arr[n + 1], ft_lstnew ((void *) href));
+				ft_lstadd_back (&cueue_arr[n + 1], 
+						ft_lstnew ((void *) href));
 			else if (*href == '/')
 			{
 				hostname = url_hostname(site->url);
 				href = ft_strjoin(hostname, href);
 				if (url_isvisited (href, cueue_arr, n + 1) == 0)
-					ft_lstadd_back (&cueue_arr[n + 1], ft_lstnew ((void *) href));
+					ft_lstadd_back (&cueue_arr[n + 1], 
+							ft_lstnew ((void *) href));
 			}
 		}
 		elements = elements->next;

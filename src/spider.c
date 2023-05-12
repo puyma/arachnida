@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 16:23:46 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 11:24:22 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:32:49 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,19 @@ int	main(int argc, char **argv)
 				ft_append_anchors (site, cueue_arr, i);
 			
 			images = html_get_images(site);
-			/*
 			while (images != NULL)
 			{
-				//ft_printf(" - %s\n", images->content);
-				(void) http_download;
-				//http_download (images->content, NULL);
+				ft_printf(" - %s\n", images->content);
+				/*
+				if (*(images->content) == 'd')
+				{
+					// write "data" to file; is base64'd
+				}
+				else if (*(images->content) == 'h')
+					http_download (images->content, NULL);
+				*/
 				images = images->next;
 			}
-			*/
 			url_cueue = url_cueue->next;
 		}
 		++i;

@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:37:20 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 11:23:05 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:45:06 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int		http_get(char *url, void *userdata,
 				size_t nmemb, void *userdata));
 int		http_download (char *url, char *filename);
 
-int		html_get_attribute (const char *attr, char **html_element);
+char	*html_get_attribute (const char *attr, char *html_element);
 t_list	*html_get_images(t_site *site);
 
 int		url_isvalid (char *url);
