@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 16:23:46 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/15 13:41:29 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/15 16:42:54 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,14 @@ main (int argc, char **argv)
 	t_list 		**cueue_arr;
 	t_list		*lst;
 
-	// Initializes program options: verbose, depth level,
+	// Initializes program options: 
+	// verbose, depth level,
 	// path !? and recursive mode !?
 	if (ft_init (argc, argv) != 0)
 	{ write (2, "ft_init failed\n", 15); return (1); }
 
-	// Set the first -and only- url to the first list in `cueue_arr`.
+	// Set the first -and only- url 
+	// to the first list in `cueue_arr`.
 	// It's inputed by the user.
 	cueue_arr = ft_init_cueue (argv[optind]);
 	if (cueue_arr == NULL)
@@ -48,38 +50,34 @@ main (int argc, char **argv)
 		while (url_cueue != NULL)
 		{
 			url = url_cueue->content;
+
 			// Create t_site with `url`, `hostname` and `raw_html`.
-			if (crawl (url, &site))
-			{
-				url_cueue = url_cueue->next;
-				continue ;
-			}
-			else
-			{
-				ft_printf("└ OK\n");
-			}
+			if (crawl (url, &site)) { url_cueue = url_cueue->next; continue ; }
+			else { ft_printf("└ OK\n"); }
+
 			// Find links in `site->raw_html` 
 			// and add them to `cueue_arr` (t_list).
 			if (i < depth_level - 1)
-			{
-				append_anchors (site, cueue_arr, i + 1);
-			}
+			{ append_anchors (site, cueue_arr, i + 1); }
 
 			// Get list of `images` in a `site`.
 			// Then, download every item in (t_list).
 			// Support for base64 encoded images is not implemented as of now.
 			
-			//lst = html_get_imgs(site);
-			//http_download_lst(lst);
-			//ft_lstclear(&lst, &free);
-			
+			// <img>
+			lst = html_get_imgs(site);
+			http_download_lst(lst);
+			ft_lstclear(&lst, &free);
+	
+			// <picture>
 			lst = html_get_pictures(site);
 			http_download_lst(lst);
-			//ft_lstclear(&lst, &free);
+			ft_lstclear(&lst, &free);
 		
-			//lst = html_get_svgs(site);
-			//http_download_lst(lst);
-			//ft_lstclear(&lst, &free);
+			// <svg>
+			lst = html_get_svgs(site);
+			html_save_snippets(lst, ".svg");
+			ft_lstclear(&lst, &free);
 
 			url_cueue = url_cueue->next;
 		}

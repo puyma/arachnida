@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 12:10:25 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/15 13:43:27 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/15 15:35:06 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ html_get_attr_values (char *attr, char *html_element)
 	char		*attribute = ft_strjoin(attr, "=");
 	size_t		attribute_len = strlen(attribute);
 
-	el = html_get_attr (attr, html_element);
+	el = html_element;
 	while (*el != '\0')
 	{
 		if (strncmp (el, "</picture>", strlen ("</picture>")) == 0)
