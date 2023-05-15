@@ -6,7 +6,7 @@
 #    By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 19:01:34 by mpuig-ma          #+#    #+#              #
-#    Updated: 2023/05/12 12:25:43 by mpuig-ma         ###   ########.fr        #
+#    Updated: 2023/05/15 12:32:46 by mpuig-ma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,9 @@ SRC_FILES	:=	src/spider.c \
 				src/crawl.c src/http.c src/site.c \
 				src/html_a.c \
 				src/html_attributes.c \
-				src/html_images.c \
+				src/html_img.c \
+				src/html_picture.c \
+				src/html_svg.c \
 				src/str_utils.c src/url_utils.c
 
 OBJ_FILES	=	$(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(notdir $(basename $(SRC_FILES)))))

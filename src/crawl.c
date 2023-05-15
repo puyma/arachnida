@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:13:37 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 13:26:06 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/15 12:23:38 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,19 @@ static int	point_tags (t_site **site);
 
 int
 crawl(char *url, t_site **site)
+	// This function 
 {
-	printf ("crawling: %s\n", url);
+	ft_printf ("crawling: %s\n", url);
+
 	*site = ft_new_site ();
-	if (site == NULL)
-		return (1);
-	if (http_get (url, (void *) *site, NULL) != 0)
-		return (1);
+	if (site == NULL) { return (1); }
 	(*site)->url = url;
 	(*site)->hostname = url_hostname(url);
-	if (point_tags (site) != 0)
-		return (3);
+	
+	if (http_get (url, (void *) *site, NULL) != 0)
+		return (1);
+	
+	if (point_tags (site) != 0) { return (3); }
 	return (0);
 }
 

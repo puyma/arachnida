@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 12:08:33 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 18:31:46 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/15 12:23:35 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ url_hostname(char *url)
 int
 cueue_url (char *url, t_list **url_cueue, int n)
 {
-	if (url_isvisited (url, url_cueue, n + 1) == 0)
-		ft_lstadd_back (&url_cueue[n + 1], ft_lstnew ((void *) url));
+	if (url_isvisited (url, url_cueue, n) == 0)
+		ft_lstadd_back (&url_cueue[n], ft_lstnew ((void *) url));
 	else
 		return (1);
 	return (0);

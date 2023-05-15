@@ -1,38 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   html_a.c                                           :+:      :+:    :+:   */
+/*   html_svg.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/12 12:22:55 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/15 12:23:34 by mpuig-ma         ###   ########.fr       */
+/*   Created: 2023/05/15 12:26:57 by mpuig-ma          #+#    #+#             */
+/*   Updated: 2023/05/15 13:05:39 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arachnida.h"
 
-int
-append_anchors (t_site *site, t_list **cueue_arr, int n)
+t_list *
+html_get_svgs (t_site *site)
 {
 	char	*el;
-	char	*value;
+	char	*svg;
 	t_list	*elements;
+	t_list	*svg_lst = NULL;
+
+	if (site == NULL)
+		return (NULL);
 
 	elements = site->elements;
 	while (elements != NULL)
 	{
 		el = elements->content;
-		if (*(el + 1) == 'a' && isspace (*(el + 2)) != 0)
+		if (*(el + 1) == 's' && *(el + 2) == 'v'
+				&& *(el + 3) == 'g' && isspace (*(el + 4)) != 0)
 		{
-			value = html_get_attr_value("href", el);
-			if (value && *value == '/')
-				url_resolve_absolute (site, &value);
-			if (value && *value != 'h')
-			{ free (value); value = NULL; }
-			if (value != NULL && *value != '\0') { cueue_url (value, cueue_arr, n); }
+			// consider <svg><svg></svg></svg>
+			svg = NULL; // html_get_attr_value NOT OK FOR THIS CASE
+			if (svg == NULL || *svg == '\0')
+			{ elements = elements->next; continue; }
+			// ft_lstadd_back (*svg_lst, ft_lstnew ((void *) svg));
 		}
 		elements = elements->next;
 	}
-	return (0);
+
+	svg_lst = NULL;
+	return (svg_lst);
 }

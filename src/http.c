@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:31:21 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/12 18:53:01 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/15 13:10:09 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static size_t	c_write_callback (void *data, size_t size, 
 					size_t nmemb, void *userdata);
 
-// change ft_hht_get as base function, http_download passes url, userdata pointer and pointer to function callback.
 int
 http_get(char *url, void *userdata, FILE *file)
 {
@@ -40,8 +39,10 @@ http_get(char *url, void *userdata, FILE *file)
 		curl_easy_setopt (curl, CURLOPT_SSL_ENABLE_ALPN, 1L);
 		curl_easy_setopt (curl, CURLOPT_HTTP_VERSION,
 				CURL_HTTP_VERSION_NONE);
+
 		curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, &c_write_callback);
 		curl_easy_setopt (curl, CURLOPT_WRITEDATA, (void *) userdata);
+
 		curl_easy_setopt (curl, CURLOPT_FAILONERROR, 1L);
 		curl_easy_setopt (curl, CURLOPT_EXPECT_100_TIMEOUT_MS, 3000L);
 		curl_easy_setopt (curl, CURLOPT_TIMEOUT, 20L);
@@ -57,8 +58,8 @@ http_get(char *url, void *userdata, FILE *file)
 		res = curl_easy_perform (curl);
 		if (res != CURLE_OK)
 		{
-			fprintf (stderr, "└ %s\n", 
-					curl_easy_strerror (res));
+			fprintf (stderr, "└ %s%s%s\n", RED,
+					curl_easy_strerror (res), NOSTYLE);
 			return (1);
 	   	}
 		curl_easy_cleanup (curl);
@@ -120,6 +121,40 @@ http_download(char *url, char *filename)
 	curl_global_cleanup ();
 	fclose(file);
 	close(fd);
+	return (0);
+}
+
+int
+http_download_lst (t_list *url_list)
+{
+	t_list	*l;
+	char	*url;
+	char	*filename;
+	char	*save_to;
+
+	l = url_list;
+	while (l != NULL)
+	{
+		url = l->content;
+		// check if scheme is http(s)://
+		if (url && *url != 'h' && *(url + 1) != 't') // needs to be better implemented
+		{
+			l = l->next;
+			continue ;
+		}
+		filename = url_path_to_file(url); // filename fallback should be plain url
+		if (filename)
+		{
+			printf(" %s\n", filename);
+
+			save_to = ft_strjoin(path, filename);
+			http_download(url, save_to);
+			
+			free(filename);
+			free(save_to);
+		}
+		l = l->next;
+	}
 	return (0);
 }
 
