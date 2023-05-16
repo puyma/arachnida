@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:28:41 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/16 10:46:09 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/16 13:13:40 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ html_save_snippets (t_list *lst, char *ext)
 		
 		file = fopen(filename, "w");
 		fprintf(file, "%s", lst->content);
-		printf(" %03d%s\n", counter, ext);
+		if (verbose != 0)
+			printf(" %03d%s\n", counter, ext);
 		fclose(file);
 
 		if (filename) { free (filename); }

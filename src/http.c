@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:31:21 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/16 12:51:32 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/16 13:12:51 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,8 @@ http_download_lst (t_list *url_list)
 		filename = url_path_to_file(url); // filename fallback should be plain url
 		if (filename)
 		{
-			printf(" %s\n", filename);
+			if (verbose != 0)
+				printf(" %s\n", filename);
 
 			save_to = ft_strjoin(path, filename);
 			http_download(url, save_to);
