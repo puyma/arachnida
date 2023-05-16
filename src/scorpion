@@ -1,0 +1,5 @@
+#!/usr/bin/perl
+
+use Image::ExifTool qw(:Public);
+my $info = ImageInfo('~/Pictures/sharpay.jpg');
+print "$info\n";
