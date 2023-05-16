@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 16:23:46 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/16 13:00:27 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/16 13:24:14 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ ft_init (int argc, char **argv)
 	while ((c = getopt (argc, argv, "rl:vp:")) != -1)
 	{
 		if (c == 'r')
-			rflag = 1;
+			depth_level = 69;
 		else if (c == 'l')
 			lvalue = optarg;
 		else if (c == 'v')
