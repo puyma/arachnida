@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:28:41 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/15 16:42:44 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/16 10:46:09 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,22 @@
 int
 html_save_snippets (t_list *lst, char *ext)
 {
-	char		*filename;
-	static int	counter = 1;
-	int			fd;
+	FILE		*file;
+	char		*filename = NULL;
+	static int	counter = 0;
 
-	filename = ft_strjoin (ft_itoa (counter), ext);
-	char *fpath = ft_strjoin(path, filename);
 	while (lst != NULL)
 	{
-		fd = open (fpath, O_CREAT, 0777);
-		char *s = lst->content;
-		while (s && *s != '\0')
-		{
-			if (write (fd, s, 1) == -1)
-				fprintf(stderr, "error writting to fd: %d\n", fd);
-			++s;
-		}
-		close (fd);
+		++counter;
+		asprintf(&filename, "%s%03d%s", path, counter, ext);
+		
+		file = fopen(filename, "w");
+		fprintf(file, "%s", lst->content);
+		printf(" %03d%s\n", counter, ext);
+		fclose(file);
+
+		if (filename) { free (filename); }
+		lst = lst->next;
 	}
 	return (0);
 }

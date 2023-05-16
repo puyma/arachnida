@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 11:31:21 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/15 13:10:09 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/16 12:51:32 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,13 @@ http_download(char *url, char *filename)
 	CURLcode	res;
 	FILE		*file;
 
-	int fd = open(filename, 0555); (void) fd;
-	file = fopen(filename, "wb");
+	file = fopen (filename, "w");
 	if (file == NULL)
-	{ fprintf(stderr, "%s\n", strerror(errno)); exit (99); }
+	{
+		fprintf (stderr, "%s\n", strerror (errno));
+		exit (99);
+	}
+	url_decode (&url);
 	curl_global_init (CURL_GLOBAL_DEFAULT);
 	curl = curl_easy_init ();
 	if (curl)
@@ -118,30 +121,26 @@ http_download(char *url, char *filename)
 	   	}
 		curl_easy_cleanup (curl);
 	}
-	curl_global_cleanup ();
+	curl_global_cleanup ();	
 	fclose(file);
-	close(fd);
 	return (0);
 }
 
 int
 http_download_lst (t_list *url_list)
 {
-	t_list	*l;
 	char	*url;
 	char	*filename;
 	char	*save_to;
 
-	l = url_list;
-	while (l != NULL)
+	while (url_list != NULL)
 	{
-		url = l->content;
+		url = url_list->content;
+
 		// check if scheme is http(s)://
 		if (url && *url != 'h' && *(url + 1) != 't') // needs to be better implemented
-		{
-			l = l->next;
-			continue ;
-		}
+		{ url_list = url_list->next; continue ; }
+
 		filename = url_path_to_file(url); // filename fallback should be plain url
 		if (filename)
 		{
@@ -153,7 +152,7 @@ http_download_lst (t_list *url_list)
 			free(filename);
 			free(save_to);
 		}
-		l = l->next;
+		url_list = url_list->next;
 	}
 	return (0);
 }

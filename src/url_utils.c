@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 12:08:33 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/15 12:23:35 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/16 12:58:35 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,55 @@ url_resolve_absolute (t_site *site, char **url)
 char *
 url_path_to_file (char *url)
 {
-	char	*path_to_file;
+	char	*file;
+	char	*start;
+	char	*end;
 
-	path_to_file = strdup (strrchr (url, '/') + 1);
-	return (path_to_file);
+	start = strrchr (url, '/') + 1;
+	end = strchr (url, '&');
+	// 2f or 2F == '/'
+	file = strndup (start, end - start);
+	return (file);
+}
+
+int
+url_decode (char **url)
+{
+	char	*s;
+	char	*new_url;
+	size_t	amp_counter = 0;
+	size_t	total_len;
+	size_t	i = 0;
+
+	s = strstr (*url, "&amp;");
+	if (s == NULL)
+		return (0);
+	while (s && *s != '\0')
+	{
+		++amp_counter;
+		++s;
+		s = strstr (s, "&amp;");
+	}
+	
+	total_len = strlen (*url) - (amp_counter * 4);
+	new_url = (char *) calloc (total_len, sizeof (char));
+	if (new_url == NULL) { exit (78); }
+
+	s = *url;
+	while (i < total_len - 1)
+	{
+		if (s && s == strstr(s, "&amp;"))
+		{
+			new_url[i] = *s;
+			s += 5;
+		}
+		else
+		{
+			new_url[i] = *s;
+			++s;
+		}
+		++i;
+	}
+	*url = new_url;
+	return (0);
 }

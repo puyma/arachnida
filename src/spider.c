@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 16:23:46 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/15 16:42:54 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/16 13:00:27 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ main (int argc, char **argv)
 			lst = html_get_pictures(site);
 			http_download_lst(lst);
 			ft_lstclear(&lst, &free);
-		
+	
 			// <svg>
 			lst = html_get_svgs(site);
 			html_save_snippets(lst, ".svg");
@@ -120,6 +120,15 @@ ft_init (int argc, char **argv)
 	if (lvalue != NULL)
 	{
 		depth_level = atoi (lvalue);
+	}
+
+	if (pvalue == NULL)
+	{
+		(void) pvalue;
+	}
+	else if (pvalue[strlen (pvalue)] != '/')
+	{
+		path = ft_strjoin (pvalue, "/");
 	}
 
 	if (! argv[optind] || url_isvalid (argv[optind]) == -1)

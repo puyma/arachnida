@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:37:20 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/15 16:42:16 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/16 11:46:02 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int		url_isvisited (char *href, t_list **url_cueue, int n);
 int		url_resolve_absolute (t_site *site, char **url);
 char	*url_path_to_file (char *url);
 char	*url_hostname (char *url);
+int		url_decode (char **url);
 int		cueue_url (char *url, t_list **url_cueue, int n);
 
 int		append_anchors (t_site *site, t_list **urls, int n);

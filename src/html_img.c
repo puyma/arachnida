@@ -6,7 +6,7 @@
 /*   By: mpuig-ma <mpuig-ma@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 10:43:12 by mpuig-ma          #+#    #+#             */
-/*   Updated: 2023/05/15 12:38:34 by mpuig-ma         ###   ########.fr       */
+/*   Updated: 2023/05/16 13:01:11 by mpuig-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,17 @@ html_get_imgs (t_site *site)
 			img_url = html_get_attr_value ("src", el);
 			if (img_url == NULL || *img_url == '\0')
 			{ elements = elements->next; continue ; }
+
 			// relative url could also start with . .. ./
 			if (img_url && *img_url == '/')
+			{
 				url_resolve_absolute (site, &img_url);
+			}
+
 			// if img is encoded "data:image..."
-			//if (img_url && *img_url == 'h')
-			ft_lstadd_back (&img_lst, ft_lstnew ((void *) img_url));
-			//write (1, img_url, strlen(img_url));
-			//write (1, "\n", 1);
+			
+			if (img_url && *img_url == 'h' && *(img_url + 1) == 't')
+				ft_lstadd_back (&img_lst, ft_lstnew ((void *) img_url));
 		}
 		elements = elements->next;
 	}
